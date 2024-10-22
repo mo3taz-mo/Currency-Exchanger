@@ -1,0 +1,98 @@
+<div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+  <h2 class="text-2xl font-bold mb-4">Currency Converter</h2>
+  <!-- <div class="mb-4">
+    <label class="block text-gray-700 text-sm font-bold mb-2" for="amount">
+      Amount
+    </label>
+    <input
+      class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+      id="amount"
+      type="number"
+      [(ngModel)]="amount"
+      (ngModelChange)="validateAmount()"
+      placeholder="Enter amount"
+    >
+  </div> -->
+  <div class="mb-4">
+    <label class="block text-gray-700 text-sm font-bold mb-2" for="amount">
+      Amount
+    </label>
+    <input
+      class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+      id="amount"
+      type="text"
+      [(ngModel)]="amount"
+      (input)="onAmountInput($event)"
+      (keypress)="onKeyPress($event)"
+      [placeholder]="'Enter amount'"
+      [class.border-red-500]="!isValidInput"
+    >
+    <p *ngIf="!isValidInput" class="text-red-500 text-xs italic mt-1">
+      Please enter a valid number
+    </p>
+  </div>
+  <div class="flex flex-col sm:flex-row mb-4">
+    <div class="w-full sm:w-1/2 mb-4 sm:mb-0 sm:mr-2">
+      <label class="block text-gray-700 text-sm font-bold mb-2" for="from">
+        From
+      </label>
+      <select
+        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        id="from"
+        [(ngModel)]="fromCurrency"
+        [disabled]="!isAmountValid || disableFrom"
+        (ngModelChange)="onCurrencyChange()"
+      >
+        <option *ngFor="let currency of currencies" [value]="currency">{{ currency }}</option>
+      </select>
+    </div>
+    <div class="w-full sm:w-1/2 sm:ml-2">
+      <label class="block text-gray-700 text-sm font-bold mb-2" for="to">
+        To
+      </label>
+      <select
+        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        id="to"
+        [(ngModel)]="toCurrency"
+        [disabled]="!isAmountValid"
+        (ngModelChange)="onCurrencyChange()"
+      >
+        <option *ngFor="let currency of currencies" [value]="currency">{{ currency }}</option>
+      </select>
+    </div>
+  </div>
+  <div class="flex flex-col sm:flex-row items-center justify-between">
+    <button
+      class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mb-2 sm:mb-0"
+      (click)="convertCurrency()"
+      [disabled]="!isAmountValid || !fromCurrency || !toCurrency"
+    >
+      Convert
+    </button>
+    <button
+      class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mb-2 sm:mb-0"
+      (click)="swapCurrencies()"
+      [disabled]="!isAmountValid || disableFrom"
+    >
+      Swap
+    </button>
+    <button
+      *ngIf="!disableFrom"
+      class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+      (click)="goToDetails()"
+      [disabled]="!isAmountValid || !fromCurrency || !toCurrency"
+    >
+      View Details
+    </button>
+  </div>
+  <div *ngIf="convertedAmount" class="mt-4">
+    <p class="text-xl font-bold">
+      Converted amount: {{ convertedAmount | number:'1.2-2' }} {{ toCurrency }}
+    </p>
+  </div>
+</div>
+<app-quick-conversions
+  *ngIf="fromCurrency && toCurrency"
+  [fromCurrency]="fromCurrency"
+  [toCurrency]="toCurrency"
+></app-quick-conversions>
